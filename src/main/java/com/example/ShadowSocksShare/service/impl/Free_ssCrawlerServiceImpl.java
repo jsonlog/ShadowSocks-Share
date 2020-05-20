@@ -89,7 +89,7 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 					if (dev.getSize().height > 100) {
 						List<WebElement> trList = dev.findElements(By.xpath("./table/tbody/tr"));
 
-						Set<ShadowSocksDetailsEntity> set = Collections.synchronizedSet(new HashSet<>(trList.size()));
+						Set<ShadowSocksDetailsEntity> ShadowSocksEntity = Collections.synchronizedSet(new HashSet<>(trList.size()));
 
 						trList.parallelStream().forEach((tr) -> {
 							// log.debug("TR innerHTML =================>{}", tr.getAttribute("innerHTML"));
@@ -182,7 +182,8 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 		WebDriver getDriver() throws IOException;
 	}
 
-	@Profile("dev")
+//	@Profile("dev")
+	@Profile("prod")
 	@Service("driverService")
 	class EdgeDriverService implements DriverService {
 		@Value("${driver.path}")
@@ -200,7 +201,8 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 		}
 	}
 
-	@Profile("prod")
+//	@Profile("prod")
+	@Profile("dev")
 	@Service("driverService")
 	class ChromeDriverService implements DriverService {
 		@Override
@@ -208,6 +210,7 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 			/*System.setProperty("webdriver.chrome.logfile", "D:\\chromedriver.log");
 			System.setProperty("webdriver.chrome.verboseLogging", "true");*/
 
+			System.setProperty("webdriver.chrome.driver","lib/chromedriver");
 			org.openqa.selenium.chrome.ChromeDriverService service;
 
 			if (SystemUtils.IS_OS_WINDOWS) {
@@ -227,15 +230,16 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 				options.addArguments("window-size=1200x600");
 				options.addArguments("--disable-gpu");
 			} else {
-				String binaryPath = EnvironmentUtils.getProcEnvironment().get("GOOGLE_CHROME_SHIM");
-				log.debug("GOOGLE_CHROME_SHIM : {}", binaryPath);
-				log.debug("GOOGLE_CHROME_BIN : {}", EnvironmentUtils.getProcEnvironment().get("GOOGLE_CHROME_BIN"));
-				options.setBinary(binaryPath);
-				options.addArguments("--headless");
+//				String binaryPath = EnvironmentUtils.getProcEnvironment().get("GOOGLE_CHROME_SHIM");
+//				log.debug("GOOGLE_CHROME_SHIM : {}", binaryPath);
+//				log.debug("GOOGLE_CHROME_BIN : {}", EnvironmentUtils.getProcEnvironment().get("GOOGLE_CHROME_BIN"));
+//				options.setBinary(binaryPath);
+//				options.setBinary("/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome");// "/Applications/Google\\ Chrome.app");
+//				options.addArguments("--headless");
 				options.addArguments("window-size=1200x600");
 				options.addArguments("--disable-gpu");
-				// options.addArguments("--no-sandbox");
-				// options.addArguments("--remote-debugging-port=9222");
+				 options.addArguments("--no-sandbox");
+				 options.addArguments("--remote-debugging-port=9222");
 			}
 
 			if (ssProxyEnable) {

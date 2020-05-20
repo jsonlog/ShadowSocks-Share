@@ -1,5 +1,8 @@
 # 自定义
 /logs
+lib
+# chromedriver
+target
 
 # 系统文件
 target/*
