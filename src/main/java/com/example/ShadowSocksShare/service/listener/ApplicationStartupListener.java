@@ -2,6 +2,7 @@ package com.example.ShadowSocksShare.service.listener;
 
 import com.example.ShadowSocksShare.service.ShadowSocksCrawlerService;
 import com.example.ShadowSocksShare.service.ShadowSocksSerivce;
+import com.example.ShadowSocksShare.service.impl.FileImportServiceImpl;
 import com.example.ShadowSocksShare.service.impl.Free_ssCrawlerServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class ApplicationStartupListener {
 	@Async
 	@EventListener
 	public void handleOrderStateChange(ContextRefreshedEvent contextRefreshedEvent) {
-		crawlerSet.parallelStream().filter((service) -> (service instanceof Free_ssCrawlerServiceImpl)).forEach((service) -> shadowSocksSerivce.crawlerAndSave(service));
+		crawlerSet.parallelStream().filter((service) -> (service instanceof FileImportServiceImpl)).forEach((service) -> shadowSocksSerivce.crawlerAndSave(service));
 		log.debug("================>{}", "初始扫描完成...");
 	}
 }

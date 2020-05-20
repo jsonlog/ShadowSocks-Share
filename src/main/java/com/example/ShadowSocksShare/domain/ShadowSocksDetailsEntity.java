@@ -119,7 +119,8 @@ public class ShadowSocksDetailsEntity implements Serializable {
 				password = Base64.decodeBase64(encode[0]).toString();
 				server = encode[1];
 				server_port = Integer.parseInt(ssparam[2]);
-			}else if(sslink.startsWith("ssr://")){
+			}else
+				if(sslink.startsWith("ssr://")){
 				method = ssparam[3];
 				String[] encode = ssparam[5].split("/");
 				password = Base64.decodeBase64(encode[0]).toString();
