@@ -1,8 +1,8 @@
 # 自定义
 /logs
-
+!*.jar
 # 系统文件
-/target
+# /target
 /.settings
 /.classpath
 /.project
