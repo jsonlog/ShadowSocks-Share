@@ -89,7 +89,7 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 					if (dev.getSize().height > 100) {
 						List<WebElement> trList = dev.findElements(By.xpath("./table/tbody/tr"));
 
-						Set<ShadowSocksDetailsEntity> ShadowSocksEntity = Collections.synchronizedSet(new HashSet<>(trList.size()));
+						Set<ShadowSocksDetailsEntity> set = Collections.synchronizedSet(new HashSet<>(trList.size()));
 
 						trList.parallelStream().forEach((tr) -> {
 							// log.debug("TR innerHTML =================>{}", tr.getAttribute("innerHTML"));

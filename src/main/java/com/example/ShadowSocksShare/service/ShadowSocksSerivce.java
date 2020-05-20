@@ -34,7 +34,7 @@ public interface ShadowSocksSerivce {
 	/**
 	 * 3. 生成 SSR 连接
 	 */
-	String toSSLink(List<ShadowSocksEntity> entities, boolean valid);
+	String toSSRLink(List<ShadowSocksEntity> entities, boolean valid);
 
 	/**
 	 * SS 有效性检查，获取 SS 信息，判断端口有效性，并更新数据

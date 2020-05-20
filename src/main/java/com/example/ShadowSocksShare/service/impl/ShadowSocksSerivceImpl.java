@@ -88,7 +88,7 @@ public class ShadowSocksSerivceImpl implements ShadowSocksSerivce {
 	 * 生成规则：https://github.com/ssrbackup/shadowsocks-rss/wiki/SSR-QRcode-scheme
 	 */
 	@Override
-	public String toSSLink(List<ShadowSocksEntity> entities, boolean valid) {
+	public String toSSRLink(List<ShadowSocksEntity> entities, boolean valid) {
 		if (!entities.isEmpty()) {
 			StringBuilder link = new StringBuilder();
 			for (ShadowSocksEntity entity : entities) {

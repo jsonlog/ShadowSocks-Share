@@ -69,7 +69,7 @@ public class MainController {
 		List<ShadowSocksEntity> ssrList = shadowSocksSerivceImpl.findAll(pageable);
 		return ResponseEntity.ok()
 				.contentType(MediaType.TEXT_PLAIN)
-				.body(shadowSocksSerivceImpl.toSSLink(ssrList, valid));
+				.body(shadowSocksSerivceImpl.toSSRLink(ssrList, valid));
 	}
 
 	/**

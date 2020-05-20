@@ -55,11 +55,11 @@ public class ShadowSocksDetailsEntity implements Serializable {
 
 	@Column
 	// @NonNull
-	private String protocol;    // 协议
+	private String protocol = "origin";    // 协议
 
 	@Column
 	// @NonNull
-	private String obfs;    // 混淆
+	private String obfs = "plain";    // 混淆
 
 	// 非必填
 	@Column
@@ -85,6 +85,9 @@ public class ShadowSocksDetailsEntity implements Serializable {
 		this.protocol = protocol;
 		this.obfs = obfs;
 	}
+	public ShadowSocksDetailsEntity(String sslink){
+		linktoJson(sslink);
+	}
 
 	public String getJsonStr() throws JsonProcessingException {
 		Map<String, Object> json = new HashMap<>();
@@ -99,6 +102,37 @@ public class ShadowSocksDetailsEntity implements Serializable {
 		json.put("ssr_protocol", protocol);
 		return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(json);
 	}
+	public void linktoJson(String sslink){
+		// .replaceAll("-","+").replaceAll("_","/");
+		String base64encodedString = sslink.substring(sslink.indexOf("://")+3);
+
+		try {
+			System.out.println("base64encodedString: " + base64encodedString);
+			byte[] base64decodedBytes = Base64.decodeBase64(base64encodedString);
+//			System.out.println("原始字符串: " + new String(base64decodedBytes, "utf-8"));
+			String[] ssparam = new String(base64decodedBytes, "utf-8").split(":");
+			for(String param:ssparam) System.out.println(param);
+			if (sslink.startsWith("ss:")) {
+				//aes-256-cfb:eIW0Dnk69454e6nSwuspv9DmS201tQ0D@74.207.246.242:8099
+				method = ssparam[0];
+				String[] encode = ssparam[1].split("@");
+				password = Base64.decodeBase64(encode[0]).toString();
+				server = encode[1];
+				server_port = Integer.parseInt(ssparam[2]);
+			}else if(sslink.startsWith("ssr://")){
+				method = ssparam[3];
+				String[] encode = ssparam[5].split("/");
+				password = Base64.decodeBase64(encode[0]).toString();
+				server = ssparam[0];
+				server_port = Integer.parseInt(ssparam[1]);
+				protocol = ssparam[2];
+				obfs = ssparam[4];
+			}
+			System.out.println(this);
+		}catch(java.io.UnsupportedEncodingException e){
+			System.out.println("Error :" + e.getMessage());
+		}
+	}
 
 
 	/**
@@ -107,6 +141,7 @@ public class ShadowSocksDetailsEntity implements Serializable {
 	 */
 	public String getLink() {
 		// ssr://base64(host:port:protocol:method:obfs:base64pass/?obfsparam=base64param&protoparam=base64param&remarks=base64remarks&group=base64group&udpport=0&uot=0)
+		//ssr-02.ssrsub.xyz:443:auth_aes128_md5:aes-256-ctr:tls1.2_ticket_auth:aHR0cDovL3QuY24vRUdKSXlybA/?obfsparam=5LuY6LS5U1NS5rOo5YaMOmh0dHA6Ly90LmNuL0VHSkl5cmw&protoparam=dC5tZS9TU1JTVUI&remarks=QFNTUlNVQi3pn6nlm71zc3IwMi3ku5jotLlTU1LmjqjojZA6dC5jbi9FR0pJeXJs&group=dC5tZS9TU1JTVUI
 		StringBuilder link = new StringBuilder();
 		link
 				.append(server)
@@ -138,4 +173,22 @@ public class ShadowSocksDetailsEntity implements Serializable {
 				.append("&group=").append(Base64.encodeBase64URLSafeString(group.getBytes(StandardCharsets.UTF_8)));
 		return "ssr://" + Base64.encodeBase64URLSafeString(link.toString().getBytes(StandardCharsets.UTF_8)) + " ";
 	}*/
+
+	@Override
+	public String toString() {
+		return "ShadowSocksDetailsEntity{" +
+				"id=" + id +
+				", server='" + server + '\'' +
+				", server_port=" + server_port +
+				", password='" + password + '\'' +
+				", method='" + method + '\'' +
+				", protocol='" + protocol + '\'' +
+				", obfs='" + obfs + '\'' +
+				", remarks='" + remarks + '\'' +
+				", group='" + group + '\'' +
+				", valid=" + valid +
+				", validTime=" + validTime +
+				", title='" + title + '\'' +
+				'}';
+	}
 }
