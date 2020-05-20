@@ -12,7 +12,7 @@ server:
 spring:
   # profiles
   profiles:
-    active: prod
+    active: dev
 
   # Spring H2 配置
   h2:

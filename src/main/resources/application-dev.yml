@@ -20,7 +20,14 @@ proxy:
 
 # driver 路径
 driver:
-  path: D:\MicrosoftWebDriver.exe
+  path: lib\MicrosoftWebDriver.exe
+
+
+#  因 Heroku 应用 30 分钟没有访问会自动休眠，为防止休眠，系统每 20 分钟访问一次该配置地址
+health:
+  url:
+  cron: 0 0/20 6-23 * * ?
+
 
 # spring boot 启用调试模式
 debug: true
@@ -32,6 +39,6 @@ spring:
   datasource:
     platform: h2
     driver-class-name:  org.h2.Driver
-    url: jdbc:h2:~/test
+    url: jdbc:h2:./data/db
     username: sa
     password:

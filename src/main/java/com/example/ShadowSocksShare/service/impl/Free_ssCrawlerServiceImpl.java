@@ -130,7 +130,7 @@ public class Free_ssCrawlerServiceImpl extends ShadowSocksCrawlerService {
 				}
 			}
 		} catch (Exception e) {
-			log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);//@Value("${driver.path=lib\MicrosoftWebDriver.exe}") private String driverPath; TODO The path to the driver executable must be set by the webdriver.chrome.driver system property; for more information, see https://github.com/SeleniumHQ/selenium/wiki/ChromeDriver. The latest version can be downloaded from http://chromedriver.storage.googleapis.com/index.html
 		} finally {
 			if (driver != null) {
 				driver.quit();

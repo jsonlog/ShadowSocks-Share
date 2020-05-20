@@ -1,0 +1,2 @@
+#!bin/sh
+java -jar -Dfile.encoding=UTF-8 -Djava.net.preferIPv4Stack=true -Dspring.profiles.active=dev ../target/ShadowSocks-Share-0.0.1-SNAPSHOT.jar --spring.config.location=src/main/resources/application-dev.yml

@@ -2,11 +2,14 @@
 /logs
 
 # 系统文件
-/target
+target/*
+!target/ShadowSocks-Share-0.0.1-SNAPSHOT.jar
 /.settings
 /.classpath
 /.project
 /.idea
+*.ipr
+*.iws
 /.mvn
 /ShadowSocks-Share.iml
 /catalina.base_IS_UNDEFINED
