@@ -38,6 +38,8 @@ spring:
   # Spring 数据库
   datasource:
     platform: h2
+#    schema: clasepath:schema.sql
+#    data: classpath:data.sql
     driver-class-name:  org.h2.Driver
     url: jdbc:h2:./data/db
     username: sa
