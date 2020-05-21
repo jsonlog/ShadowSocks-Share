@@ -33,7 +33,7 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
                         BufferedReader bufferedReader = new BufferedReader(read);
                         String lineTxt = null;
                         while ((lineTxt = bufferedReader.readLine()) != null) {
-                            if(lineTxt.startsWith("ss://") || lineTxt.startsWith("ssr://"))
+                            if(lineTxt.startsWith("ssr://"))// || lineTxt.startsWith("ss://"))
                                 list.add(lineTxt);
                             System.out.println(lineTxt);
                         }
@@ -48,9 +48,9 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
 
         Set<ShadowSocksDetailsEntity> set = Collections.synchronizedSet(new HashSet<>(list.size()));
         Iterator<String> iterable = list.iterator();
+        System.out.println("list.size():"+list.size());
         while (iterable.hasNext()) {
             ShadowSocksDetailsEntity ss = new ShadowSocksDetailsEntity(iterable.next());
-            System.out.println(ss);
             set.add(ss);
         }
         // 3. 生成 ShadowSocksEntity

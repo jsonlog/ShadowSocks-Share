@@ -107,23 +107,23 @@ public class ShadowSocksDetailsEntity implements Serializable {
 		String base64encodedString = sslink.substring(sslink.indexOf("://")+3);
 
 		try {
-			System.out.println("base64encodedString: " + base64encodedString);
+			System.out.println("base64encodedString: " + sslink);
 			byte[] base64decodedBytes = Base64.decodeBase64(base64encodedString);
 //			System.out.println("原始字符串: " + new String(base64decodedBytes, "utf-8"));
 			String[] ssparam = new String(base64decodedBytes, "utf-8").split(":");
-			for(String param:ssparam) System.out.println(param);
-			if (sslink.startsWith("ss:")) {
+			for(String param:ssparam) System.out.print(param+":");
+			if (sslink.startsWith("ss:") && ssparam.length > 2) {
 				//aes-256-cfb:eIW0Dnk69454e6nSwuspv9DmS201tQ0D@74.207.246.242:8099
 				method = ssparam[0];
 				String[] encode = ssparam[1].split("@");
-				password = Base64.decodeBase64(encode[0]).toString();
+				password = new String(Base64.decodeBase64(encode[0]));
 				server = encode[1];
 				server_port = Integer.parseInt(ssparam[2]);
 			}else
-				if(sslink.startsWith("ssr://")){
+				if(sslink.startsWith("ssr://") && ssparam.length > 5){
 				method = ssparam[3];
 				String[] encode = ssparam[5].split("/");
-				password = Base64.decodeBase64(encode[0]).toString();
+				password = new String(Base64.decodeBase64(encode[0]));
 				server = ssparam[0];
 				server_port = Integer.parseInt(ssparam[1]);
 				protocol = ssparam[2];
@@ -132,7 +132,7 @@ public class ShadowSocksDetailsEntity implements Serializable {
 			System.out.println(this);
 		}catch(java.io.UnsupportedEncodingException e){
 			System.out.println("Error :" + e.getMessage());
-		}
+		}catch (ArrayIndexOutOfBoundsException e){}
 	}
 
 
@@ -141,8 +141,9 @@ public class ShadowSocksDetailsEntity implements Serializable {
 	 * 连接规则：https://github.com/ssrbackup/shadowsocks-rss/wiki/SSR-QRcode-scheme
 	 */
 	public String getLink() {
-		// ssr://base64(host:port:protocol:method:obfs:base64pass/?obfsparam=base64param&protoparam=base64param&remarks=base64remarks&group=base64group&udpport=0&uot=0)
+		if(true) return "ssr://base64(host:port:protocol:method:obfs:base64pass/?obfsparam=base64param&protoparam=base64param&remarks=base64remarks&group=base64group&udpport=0&uot=0)";
 		//ssr-02.ssrsub.xyz:443:auth_aes128_md5:aes-256-ctr:tls1.2_ticket_auth:aHR0cDovL3QuY24vRUdKSXlybA/?obfsparam=5LuY6LS5U1NS5rOo5YaMOmh0dHA6Ly90LmNuL0VHSkl5cmw&protoparam=dC5tZS9TU1JTVUI&remarks=QFNTUlNVQi3pn6nlm71zc3IwMi3ku5jotLlTU1LmjqjojZA6dC5jbi9FR0pJeXJs&group=dC5tZS9TU1JTVUI
+
 		StringBuilder link = new StringBuilder();
 		link
 				.append(server)
@@ -151,8 +152,7 @@ public class ShadowSocksDetailsEntity implements Serializable {
 				.append(SSR_LINK_SEPARATOR).append(method)
 				.append(SSR_LINK_SEPARATOR).append(obfs)
 				.append(SSR_LINK_SEPARATOR).append(Base64.encodeBase64URLSafeString(password.getBytes(StandardCharsets.UTF_8)))
-				.append("/?obfsparam=")
-				// .append("&protoparam=")
+				.append("/?obfsparam=")// .append("&protoparam=")
 				.append("&remarks=").append(Base64.encodeBase64URLSafeString(remarks.getBytes(StandardCharsets.UTF_8)))
 				.append("&group=").append(Base64.encodeBase64URLSafeString(group.getBytes(StandardCharsets.UTF_8)));
 		return "ssr://" + Base64.encodeBase64URLSafeString(link.toString().getBytes(StandardCharsets.UTF_8));
