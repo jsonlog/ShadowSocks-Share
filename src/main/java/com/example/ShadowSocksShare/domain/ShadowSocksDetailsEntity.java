@@ -132,7 +132,7 @@ public class ShadowSocksDetailsEntity implements Serializable {
 			System.out.println(this);
 		}catch(java.io.UnsupportedEncodingException e){
 			System.out.println("Error :" + e.getMessage());
-		}catch (ArrayIndexOutOfBoundsException e){}
+		}//catch (ArrayIndexOutOfBoundsException e){}
 	}
 
 

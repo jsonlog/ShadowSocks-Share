@@ -10,6 +10,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.zxing.WriterException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +63,46 @@ public class MainController {
 		// ssr 明细信息，随机排序
 		Collections.shuffle(ssrdList);
 		model.addAttribute("ssrdList", ssrdList);
+		export();
 		return "index";
+	}
+
+	public void export(){
+		/*
+		 * 使用DOM生成XML文档的大致步骤:
+		 * 1:创建一个Document对象表示一个空文档
+		 * 2:向Document中添加根元素
+		 * 3:按照文档应有的结构从根元素开始顺序添加
+		 *   子元素来形成该文档结构。
+		 * 4:创建XmlWriter对象
+		 * 5:将Document对象写出
+		 *   若写入到文件中则形成一个xml文件
+		 *   也可以写出到网络中作为传输数据使用
+		 */
+
+		//1
+		Document document = DocumentHelper.createDocument();
+		Element new_root_node = DocumentHelper.createElement("type");
+		Element new_module_1_node = DocumentHelper.createElement("module");
+
+		new_module_1_node.addAttribute("id","1");
+		new_root_node.add(new_module_1_node);
+		document.add(new_root_node);
+
+		try{
+			//4
+			XMLWriter writer = new XMLWriter(OutputFormat.createPrettyPrint());
+			FileOutputStream fos
+					= new FileOutputStream("myemp.xml");
+			writer.setOutputStream(fos);
+
+			//5
+			writer.write(document);
+			System.out.println("写出完毕!");
+			writer.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 	/**

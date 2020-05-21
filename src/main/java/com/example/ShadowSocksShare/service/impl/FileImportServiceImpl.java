@@ -21,7 +21,8 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
     private static final String TARGET_URL = "/Users/home/Documents/telegram/ssr";
 
     public ShadowSocksEntity getShadowSocks() {
-        List<String> list = new ArrayList<String>();
+//        List<String> list = new ArrayList<String>();
+        Set<String> listset = new HashSet<>();
         File directory = new File(TARGET_URL);
         if(directory.exists()) {
             if(directory.isDirectory()) {
@@ -34,7 +35,7 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
                         String lineTxt = null;
                         while ((lineTxt = bufferedReader.readLine()) != null) {
                             if(lineTxt.startsWith("ssr://"))// || lineTxt.startsWith("ss://"))
-                                list.add(lineTxt);
+                                listset.add(lineTxt);
                             System.out.println(lineTxt);
                         }
                         bufferedReader.close();
@@ -46,9 +47,9 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
             }
         }
 
-        Set<ShadowSocksDetailsEntity> set = Collections.synchronizedSet(new HashSet<>(list.size()));
-        Iterator<String> iterable = list.iterator();
-        System.out.println("list.size():"+list.size());
+        Set<ShadowSocksDetailsEntity> set = Collections.synchronizedSet(new HashSet<>(listset.size()));
+        Iterator<String> iterable = listset.iterator();
+        System.out.println("list.size():"+listset.size());
         while (iterable.hasNext()) {
             ShadowSocksDetailsEntity ss = new ShadowSocksDetailsEntity(iterable.next());
             set.add(ss);
