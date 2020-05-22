@@ -69,7 +69,7 @@ public class MainController {
 		Collections.shuffle(ssrdList);
 		model.addAttribute("ssrdList", ssrdList);
 		System.out.println("ssrdList.size()	"+ssrdList.size());
-		export(ssrdList);
+//		export(ssrdList);
 		return "index";
 	}
 
