@@ -141,21 +141,27 @@ public class ShadowSocksDetailsEntity implements Serializable {
 	 * 连接规则：https://github.com/ssrbackup/shadowsocks-rss/wiki/SSR-QRcode-scheme
 	 */
 	public String getLink() {
-		if(true) return "ssr://base64(host:port:protocol:method:obfs:base64pass/?obfsparam=base64param&protoparam=base64param&remarks=base64remarks&group=base64group&udpport=0&uot=0)";
+//		if(true) return "ssr://base64(host:port:protocol:method:obfs:base64pass/?obfsparam=base64param&protoparam=base64param&remarks=base64remarks&group=base64group&udpport=0&uot=0)";
 		//ssr-02.ssrsub.xyz:443:auth_aes128_md5:aes-256-ctr:tls1.2_ticket_auth:aHR0cDovL3QuY24vRUdKSXlybA/?obfsparam=5LuY6LS5U1NS5rOo5YaMOmh0dHA6Ly90LmNuL0VHSkl5cmw&protoparam=dC5tZS9TU1JTVUI&remarks=QFNTUlNVQi3pn6nlm71zc3IwMi3ku5jotLlTU1LmjqjojZA6dC5jbi9FR0pJeXJs&group=dC5tZS9TU1JTVUI
-
-		StringBuilder link = new StringBuilder();
-		link
-				.append(server)
-				.append(SSR_LINK_SEPARATOR).append(server_port)
-				.append(SSR_LINK_SEPARATOR).append(protocol)
-				.append(SSR_LINK_SEPARATOR).append(method)
-				.append(SSR_LINK_SEPARATOR).append(obfs)
-				.append(SSR_LINK_SEPARATOR).append(Base64.encodeBase64URLSafeString(password.getBytes(StandardCharsets.UTF_8)))
-				.append("/?obfsparam=")// .append("&protoparam=")
-				.append("&remarks=").append(Base64.encodeBase64URLSafeString(remarks.getBytes(StandardCharsets.UTF_8)))
-				.append("&group=").append(Base64.encodeBase64URLSafeString(group.getBytes(StandardCharsets.UTF_8)));
-		return "ssr://" + Base64.encodeBase64URLSafeString(link.toString().getBytes(StandardCharsets.UTF_8));
+		String string = "";
+		System.out.println(this);
+		if(server!=null&&server_port!=0&&protocol!=null&&method!=null&&obfs!=null&&password!=null) {
+			StringBuilder link = new StringBuilder();
+			link
+					.append(server)
+					.append(SSR_LINK_SEPARATOR).append(server_port)
+					.append(SSR_LINK_SEPARATOR).append(protocol)
+					.append(SSR_LINK_SEPARATOR).append(method)
+					.append(SSR_LINK_SEPARATOR).append(obfs)
+					.append(SSR_LINK_SEPARATOR).append(Base64.encodeBase64URLSafeString(password.getBytes(StandardCharsets.UTF_8)));
+			if (remarks != null)
+				link.append("/?obfsparam=")// .append("&protoparam=")
+						.append("&remarks=").append(Base64.encodeBase64URLSafeString(remarks.getBytes(StandardCharsets.UTF_8)));
+			if (group != null)
+				link.append("&group=").append(Base64.encodeBase64URLSafeString(group.getBytes(StandardCharsets.UTF_8)));
+			string = "ssr://" + Base64.encodeBase64URLSafeString(link.toString().getBytes(StandardCharsets.UTF_8));
+		}
+		return string;
 	}
 
 	/*public String getLinkNotSafe() {

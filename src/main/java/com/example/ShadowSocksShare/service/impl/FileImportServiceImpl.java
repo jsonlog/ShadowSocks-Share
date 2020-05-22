@@ -34,7 +34,7 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
                         BufferedReader bufferedReader = new BufferedReader(read);
                         String lineTxt = null;
                         while ((lineTxt = bufferedReader.readLine()) != null) {
-                            if(lineTxt.startsWith("ssr://"))// || lineTxt.startsWith("ss://"))
+                            if(lineTxt.startsWith("ssr://") || lineTxt.startsWith("ss://"))
                                 listset.add(lineTxt);
                             System.out.println(lineTxt);
                         }
