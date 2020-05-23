@@ -89,6 +89,7 @@ public class ShadowSocksSerivceImpl implements ShadowSocksSerivce {
 	 */
 	@Override
 	public String toSSRLink(List<ShadowSocksEntity> entities, boolean valid) {
+		System.out.println("-------------------------------");
 		if (!entities.isEmpty()) {
 			StringBuilder link = new StringBuilder();
 			for (ShadowSocksEntity entity : entities) {

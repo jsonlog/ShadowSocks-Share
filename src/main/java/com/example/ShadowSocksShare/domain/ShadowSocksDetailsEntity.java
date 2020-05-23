@@ -20,8 +20,8 @@ import java.util.Map;
  * https://vxblue.com/archives/115.html
  */
 @Entity
-@Getter
-@Setter
+//@Getter
+//@Setter
 @ToString
 // @RequiredArgsConstructor
 @NoArgsConstructor
@@ -34,8 +34,104 @@ public class ShadowSocksDetailsEntity implements Serializable {
 	// 必填字段
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Setter
+//	@Setter
 	private long id;
+
+	public long getId() {
+		return id;
+	}
+
+	public String getServer() {
+		return server;
+	}
+
+	public int getServer_port() {
+		return server_port;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public String getMethod() {
+		return method;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public String getObfs() {
+		return obfs;
+	}
+
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public Date getValidTime() {
+		return validTime;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setServer(String server) {
+		this.server = server;
+	}
+
+	public void setServer_port(int server_port) {
+		this.server_port = server_port;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
+	public void setObfs(String obfs) {
+		this.obfs = obfs;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
+	public void setGroup(String group) {
+		this.group = group;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+
+	public void setValidTime(Date validTime) {
+		this.validTime = validTime;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	@Column
 	// @NonNull
@@ -77,6 +173,9 @@ public class ShadowSocksDetailsEntity implements Serializable {
 	@Column
 	private String title;        // 网站名
 
+	@Transient
+	private String ssrlink = "";
+
 	public ShadowSocksDetailsEntity(String server, int server_port, String password, String method, String protocol, String obfs) {
 		this.server = server;
 		this.server_port = server_port;
@@ -91,11 +190,12 @@ public class ShadowSocksDetailsEntity implements Serializable {
 		this.password = password;
 		this.method = method;
 //		System.out.println(password+":"+server);
-		System.out.println(getLink()+",");
+//		System.out.println(getLink()+",");
 	}
-//	public ShadowSocksDetailsEntity(String sslink){
-//		linktoJson(sslink);
-//	}
+	public ShadowSocksDetailsEntity(String ssrlink){
+		linktoJson(ssrlink);
+		this.ssrlink = ssrlink;
+	}
 
 	public String getJsonStr() throws JsonProcessingException {
 		Map<String, Object> json = new HashMap<>();
@@ -115,11 +215,11 @@ public class ShadowSocksDetailsEntity implements Serializable {
 		String base64encodedString = sslink.substring(sslink.indexOf("://")+3);
 
 		try {
-			System.out.println("base64encodedString: " + sslink);
+//			System.out.println("base64encodedString: " + sslink);
 			byte[] base64decodedBytes = Base64.decodeBase64(base64encodedString);
 //			System.out.println("原始字符串: " + new String(base64decodedBytes, "utf-8"));
 			String[] ssparam = new String(base64decodedBytes, "utf-8").split(":");
-			for(String param:ssparam) System.out.print(param+":");
+//			for(String param:ssparam) System.out.print(param+":");
 			if (sslink.startsWith("ss:") && ssparam.length > 2) {
 				//aes-256-cfb:eIW0Dnk69454e6nSwuspv9DmS201tQ0D@74.207.246.242:8099
 				method = ssparam[0];
@@ -137,7 +237,7 @@ public class ShadowSocksDetailsEntity implements Serializable {
 				protocol = ssparam[2];
 				obfs = ssparam[4];
 			}
-			System.out.println(this);
+//			System.out.println(this);
 		}catch(java.io.UnsupportedEncodingException e){
 			System.out.println("Error :" + e.getMessage());
 		}//catch (ArrayIndexOutOfBoundsException e){}
@@ -161,15 +261,18 @@ public class ShadowSocksDetailsEntity implements Serializable {
 					.append(SSR_LINK_SEPARATOR).append(protocol)
 					.append(SSR_LINK_SEPARATOR).append(method)
 					.append(SSR_LINK_SEPARATOR).append(obfs)
-					.append(SSR_LINK_SEPARATOR).append(Base64.encodeBase64URLSafeString(password.getBytes(StandardCharsets.UTF_8)))
-					.append("/?obfsparam=");// .append("&protoparam=")
+					.append(SSR_LINK_SEPARATOR).append(Base64.encodeBase64URLSafeString(password.getBytes(StandardCharsets.UTF_8)));
 			if (remarks != null)
-				link.append("&remarks=").append(Base64.encodeBase64URLSafeString(remarks.getBytes(StandardCharsets.UTF_8)));
+				link
+						.append("/?obfsparam=")// .append("&protoparam=")
+						.append("&remarks=").append(Base64.encodeBase64URLSafeString(remarks.getBytes(StandardCharsets.UTF_8)));
 			if (group != null)
 				link.append("&group=").append(Base64.encodeBase64URLSafeString(group.getBytes(StandardCharsets.UTF_8)));
 			string = "ssr://" + Base64.encodeBase64URLSafeString(link.toString().getBytes(StandardCharsets.UTF_8));
-//			System.out.println(string);//TODO double print
 //		}
+		if(ssrlink != "") string = ssrlink;
+		ssrlink = "";
+//		System.out.println(string+",");//TODO double print
 		return string;
 	}
 

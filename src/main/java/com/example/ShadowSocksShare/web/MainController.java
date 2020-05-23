@@ -214,7 +214,7 @@ public class MainController {
 		try{
 			//4
 			//OutputFormat format=OutputFormat.createCompactFormat();  //紧凑格式:去除空格换行
-			XMLWriter writer = new XMLWriter(OutputFormat.createPrettyPrint());//漂亮格式：有空格换行
+			XMLWriter writer = new XMLWriter(OutputFormat.createPrettyPrint());//漂亮格式：有空格换行 setEncoding()
 			FileOutputStream fos
 					= new FileOutputStream("lib"+ File.separator + "com.qiuyuzhou.ShadowsocksX-NG.plist");
 			writer.setOutputStream(fos);
@@ -237,6 +237,7 @@ public class MainController {
 		List<ShadowSocksEntity> ssrList = shadowSocksSerivceImpl.findAll(pageable);
 		return ResponseEntity.ok()
 				.contentType(MediaType.TEXT_PLAIN)
+//				.body("");
 				.body(shadowSocksSerivceImpl.toSSRLink(ssrList, valid));
 	}
 

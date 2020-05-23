@@ -1,11 +1,6 @@
 package com.example.ShadowSocksShare.service.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
 import com.example.ShadowSocksShare.domain.ShadowSocksDetailsEntity;
@@ -20,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FileImportServiceImpl extends ShadowSocksCrawlerService {
     // 目标网站 URL
-    private static final String TARGET_URL = "/Users/home/Documents/telegram/ssr";
+    private static final String TARGET_URL = "/Users/home/Documents/telegram";
 
     public ShadowSocksEntity getShadowSocks() {
 //        List<String> list = new ArrayList<String>();
@@ -38,7 +33,7 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
                         while ((lineTxt = bufferedReader.readLine()) != null) {
                             if(lineTxt.startsWith("ss://") || lineTxt.startsWith("ssr://"))
                                 listset.add(lineTxt);
-                            System.out.println(lineTxt);
+                            else System.out.println(lineTxt);
                         }
                         bufferedReader.close();
                         read.close();
@@ -52,10 +47,12 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
         Set<ShadowSocksDetailsEntity> set = Collections.synchronizedSet(new HashSet<>(listset.size()));
         Iterator<String> iterable = listset.iterator();
         System.out.println("list.size():"+listset.size());
+        Set<String> sslinkset = new HashSet<>();
         while (iterable.hasNext()) {
             String sslink = iterable.next();
             // .replaceAll("-","+").replaceAll("_","/");
             String base64encodedString = sslink.substring(sslink.indexOf("://")+3);
+            if(sslink.indexOf("#") != -1) base64encodedString = base64encodedString.substring(0,base64encodedString.indexOf("#"));
 
             try {
 //                System.out.println("base64encodedString: " + base64encodedString);
@@ -73,6 +70,8 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
 //                    System.out.println(ssparam[0]+":"+encode[0]+":"+encode[1]+":"+ssparam[2]);
                     ShadowSocksDetailsEntity ss = new ShadowSocksDetailsEntity(server,server_port,password,method);
                     set.add(ss);
+//                    System.out.println(ss.getLink()+",");
+                    sslinkset.add(ss.getLink());
                 }else
                 if(sslink.startsWith("ssr://") && ssparam.length > 5){
                     System.out.println(sslink+",");
@@ -83,8 +82,10 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
                     Integer server_port = Integer.parseInt(ssparam[1]);
                     String protocol = ssparam[2];
                     String obfs = ssparam[4];
-                    ShadowSocksDetailsEntity ss = new ShadowSocksDetailsEntity(server,server_port,password,method,protocol,obfs);
-//                    set.add(ss);
+//                    ShadowSocksDetailsEntity ss = new ShadowSocksDetailsEntity(server,server_port,password,method,protocol,obfs);
+                    ShadowSocksDetailsEntity ss = new ShadowSocksDetailsEntity(sslink);
+                    set.add(ss);
+                    sslinkset.add(sslink);
                 }
             }catch(java.io.UnsupportedEncodingException e){
                 System.out.println("Error :" + e.getMessage());
@@ -93,9 +94,22 @@ public class FileImportServiceImpl extends ShadowSocksCrawlerService {
         // 3. 生成 ShadowSocksEntity
         ShadowSocksEntity entity = new ShadowSocksEntity(TARGET_URL, "localFile", true, new Date());
         entity.setShadowSocksSet(set);
+        export(sslinkset.iterator());
         return entity;
     }
 
+    public void export(Iterator<String> iterator){
+        try {
+            PrintWriter pw = new PrintWriter(new FileWriter("lib/out.txt"));
+            if(iterator.hasNext()) pw.write(iterator.next());
+            while (iterator.hasNext()){
+                pw.write(",\n"+iterator.next());
+            }
+            pw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected Set<ShadowSocksDetailsEntity> parse(Document document) {
         return null;
